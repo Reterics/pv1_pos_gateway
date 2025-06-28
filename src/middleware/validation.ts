@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from './errorHandler';
-import { SupportedPrinterBrand, PrinterInterfaceType } from '../printer/PrinterManager';
 
 /**
  * Validation error class
@@ -50,7 +49,8 @@ export const validatePrintRequest = (req: Request, res: Response, next: NextFunc
 
         // Validate text
         if (!text || typeof text !== 'string' || text.trim() === '') {
-            throw new ValidationError('Text is required and must be a non-empty string');
+            next(new AppError('Text is required and must be a non-empty string', 400, true));
+            return;
         }
 
         // Validate printer parameters
@@ -58,11 +58,7 @@ export const validatePrintRequest = (req: Request, res: Response, next: NextFunc
 
         next();
     } catch (error) {
-        if (error instanceof ValidationError) {
-            next(new AppError(error.message, 400, true));
-        } else {
-            next(error);
-        }
+        next(error);
     }
 };
 

@@ -38,7 +38,7 @@ function validateServerConfig(config: ServerConfig): void {
         throw new Error('Server port is required');
     }
 
-    if (typeof config.port !== 'number' || config.port <= 0 || config.port > 65535) {
+    if (!Number.isNaN(Number(config.port)) || config.port <= 0 || config.port > 65535) {
         throw new Error('Server port must be a number between 1 and 65535');
     }
 }
@@ -60,7 +60,7 @@ function validatePrinterConfig(config: PrinterConfig): void {
         throw new Error('IP address is required for TCP interface');
     }
 
-    if (config.logging && typeof config.logging !== 'boolean') {
+    if (config.logging !== true && config.logging !== false) {
         throw new Error('Logging must be a boolean value');
     }
 }

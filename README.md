@@ -12,7 +12,6 @@
 </div>
 A Node.js service that provides a gateway between POS (Point of Sale) systems and thermal printers. This application allows you to send print jobs to various thermal printer brands over different interfaces (TCP/IP, USB, Serial, Bluetooth).
 
-![img.png](public/img.png)
 ## Features
 
 - Web-based interface for printer configuration and testing

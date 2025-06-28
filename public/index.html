@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>POS Gateway Dashboard</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    button { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+<h1>POS Gateway Health Dashboard</h1>
+<div id="status">Loading...</div>
+<button id="testPrint">Print Test Page</button>
+
+<script>
+  async function refreshStatus() {
+    const res = await fetch('/api/status');
+    const json = await res.json();
+    document.getElementById('status').textContent = JSON.stringify(json, null, 2);
+  }
+
+  document.getElementById('testPrint').addEventListener('click', async () => {
+    await fetch('/api/test-print', { method: 'POST' });
+    await refreshStatus();
+    alert('Test page sent to printer!');
+  });
+
+  refreshStatus();
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "name": "pv1_pos_gateway",
+  "name": "pv1_printer_gateway",
   "version": "1.0.0",
   "main": "dist/server.js",
   "bin": "dist/server.js",

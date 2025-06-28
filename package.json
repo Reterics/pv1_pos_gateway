@@ -1,6 +1,6 @@
 {
   "name": "pv1_printer_gateway",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/server.js",
   "bin": "dist/server.js",
   "engines": {

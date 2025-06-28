@@ -5,12 +5,14 @@
 </p>
 <h1 align="center">Project V1 Printer Gateway</h1>
 
-[![build](https://github.com/Reterics/pv1_printer_gateway/actions/workflows/npm-build-test.yml/badge.svg)](https://github.com/Reterics/pv1_printer_gateway/actions/workflows/npm-build-test.yml) [![codecov](https://codecov.io/github/Reterics/pv1_printer_gateway/graph/badge.svg?token=VA00FOSC8W)](https://codecov.io/github/Reterics/pv1_printer_gateway) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![maintenance-status](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
+<div align="center">
 
+[![build](https://github.com/Reterics/pv1_printer_gateway/actions/workflows/npm-build-test.yml/badge.svg)](https://github.com/Reterics/pv1_printer_gateway/actions/workflows/npm-build-test.yml) [![codecov](https://codecov.io/github/Reterics/pv1_printer_gateway/graph/badge.svg?token=MZLXTLPJSN)](https://codecov.io/github/Reterics/pv1_printer_gateway) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![maintenance-status](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 
+</div>
 A Node.js service that provides a gateway between POS (Point of Sale) systems and thermal printers. This application allows you to send print jobs to various thermal printer brands over different interfaces (TCP/IP, USB, Serial, Bluetooth).
 
-
+![img.png](public/img.png)
 ## Features
 
 - Web-based interface for printer configuration and testing

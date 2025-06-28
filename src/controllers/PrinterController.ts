@@ -16,10 +16,10 @@ export class PrinterController {
    * Print text using the configured printer
    */
   async printText(req: Request, res: Response): Promise<void> {
-    const { text, ip, brand, interfaceType } = req.body;
+    const { text, ip, brand, interface_type } = req.body;
 
     try {
-      const success = await this.printerService.print(text, ip, brand, interfaceType);
+      const success = await this.printerService.print(text, ip, brand, interface_type);
 
       if (success) {
         res.json({ status: 'Printed successfully' });
@@ -46,7 +46,7 @@ export class PrinterController {
     // Use query parameters instead of body for GET requests
     const ip = req.query.ip as string | undefined;
     const brand = req.query.brand as SupportedPrinterBrand | undefined;
-    const interfaceType = req.query.interfaceType as PrinterInterfaceType | undefined;
+    const interfaceType = req.query.interface_type as PrinterInterfaceType | undefined;
 
     try {
       const status = await this.printerService.getPrinterStatus(ip, brand, interfaceType);
@@ -62,7 +62,7 @@ export class PrinterController {
   async testPrint(req: Request, res: Response): Promise<void> {
     const ip = req.query.ip as string | undefined;
     const brand = req.query.brand as SupportedPrinterBrand | undefined;
-    const interfaceType = req.query.interfaceType as PrinterInterfaceType | undefined;
+    const interfaceType = req.query.interface_type as PrinterInterfaceType | undefined;
 
     try {
       const success = await this.printerService.printTestPage(ip, brand, interfaceType);

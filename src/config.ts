@@ -38,7 +38,7 @@ function validateServerConfig(config: ServerConfig): void {
         throw new Error('Server port is required');
     }
 
-    if (!Number.isNaN(Number(config.port)) || config.port <= 0 || config.port > 65535) {
+    if (Number.isNaN(Number(config.port)) || config.port <= 0 || config.port > 65535) {
         throw new Error('Server port must be a number between 1 and 65535');
     }
 }

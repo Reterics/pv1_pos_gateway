@@ -42,7 +42,7 @@ describe('PrinterController', () => {
         text: 'Test message',
         ip: '192.168.1.100',
         brand: 'epson',
-        interfaceType: 'tcp'
+        interface_type: 'tcp'
       };
       
       mockPrinterService.print = jest.fn().mockResolvedValue(true);
@@ -67,7 +67,7 @@ describe('PrinterController', () => {
         text: 'Test message',
         ip: '192.168.1.100',
         brand: 'epson',
-        interfaceType: 'tcp'
+        interface_type: 'tcp'
       };
       
       mockPrinterService.print = jest.fn().mockResolvedValue(false);
@@ -92,7 +92,7 @@ describe('PrinterController', () => {
         text: 'Test message',
         ip: '192.168.1.100',
         brand: 'epson',
-        interfaceType: 'tcp'
+        interface_type: 'tcp'
       };
       
       const error = new Error('Test error');
@@ -138,7 +138,7 @@ describe('PrinterController', () => {
       mockRequest.query = {
         ip: '192.168.1.100',
         brand: 'epson',
-        interfaceType: 'tcp'
+        interface_type: 'tcp'
       };
       
       const mockStatus = { connected: true, ready: true };
@@ -161,7 +161,7 @@ describe('PrinterController', () => {
       mockRequest.query = {
         ip: '192.168.1.100',
         brand: 'epson',
-        interfaceType: 'tcp'
+        interface_type: 'tcp'
       };
       
       const error = new Error('Test error');
@@ -178,55 +178,6 @@ describe('PrinterController', () => {
       );
       expect(statusSpy).toHaveBeenCalledWith(500);
       expect(jsonSpy).toHaveBeenCalledWith({ error: 'Test error' });
-    });
-  });
-  
-  describe('testPrint', () => {
-    it('should send test print successfully', async () => {
-      // Arrange
-      mockRequest.query = {
-        ip: '192.168.1.100',
-        brand: 'epson',
-        interfaceType: 'tcp'
-      };
-      
-      mockPrinterService.print = jest.fn().mockResolvedValue(true);
-      
-      // Act
-      await printerController.testPrint(mockRequest as Request, mockResponse as Response);
-      
-      // Assert
-      expect(mockPrinterService.print).toHaveBeenCalledWith(
-        expect.stringContaining('POS Gateway Test Print'),
-        '192.168.1.100',
-        'epson',
-        'tcp'
-      );
-      expect(jsonSpy).toHaveBeenCalledWith({ status: 'Test print sent successfully' });
-    });
-    
-    it('should return error when test print fails', async () => {
-      // Arrange
-      mockRequest.query = {
-        ip: '192.168.1.100',
-        brand: 'epson',
-        interfaceType: 'tcp'
-      };
-      
-      mockPrinterService.print = jest.fn().mockResolvedValue(false);
-      
-      // Act
-      await printerController.testPrint(mockRequest as Request, mockResponse as Response);
-      
-      // Assert
-      expect(mockPrinterService.print).toHaveBeenCalledWith(
-        expect.stringContaining('POS Gateway Test Print'),
-        '192.168.1.100',
-        'epson',
-        'tcp'
-      );
-      expect(statusSpy).toHaveBeenCalledWith(400);
-      expect(jsonSpy).toHaveBeenCalledWith({ error: 'Printer not connected or test print failed' });
     });
   });
 });

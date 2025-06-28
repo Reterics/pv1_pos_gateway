@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from './errorHandler';
+import {PrinterInterfaceType, SupportedPrinterBrand} from "../printer/PrinterManager";
 
 /**
  * Validation error class
@@ -68,8 +69,8 @@ export const validatePrintRequest = (req: Request, res: Response, next: NextFunc
 export const validatePrinterQueryParams = (req: Request, res: Response, next: NextFunction): void => {
     try {
         const ip = req.query.ip as string | undefined;
-        const brand = req.query.brand as string | undefined;
-        const interfaceType = req.query.interfaceType as string | undefined;
+        const brand = req.query.brand as SupportedPrinterBrand | undefined;
+        const interfaceType = req.query.interface_type as PrinterInterfaceType | undefined;
 
         // Validate printer parameters
         validatePrinterParams(ip, brand, interfaceType);

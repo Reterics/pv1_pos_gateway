@@ -1,26 +1,55 @@
 {
   "name": "pv1_pos_gateway",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
+  "bin": "dist/server.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "engineStrict": true,
   "scripts": {
     "dev": "ts-node src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "coverage": "jest --collect-coverage",
+    "pkg:win": "npm run build && pkg . --targets node18-win-x64 --output dist/pos-gateway-win.exe",
+    "pkg:linux": "npm run build && pkg . --targets node18-linux-x64 --output dist/pos-gateway-linux",
+    "pkg:all": "npm run pkg:win && npm run pkg:linux"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
+  "pkg": {
+    "assets": [
+      "config/**/*",
+      "public/**/*"
+    ],
+    "targets": [
+      "node22-win-x64",
+      "node22-linux-x64"
+    ]
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "node-thermal-printer": "^4.5.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/node": "^24.0.7"
+    "@types/jest": "^29.5.12",
+    "@types/node": "^24.0.7",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "pkg": "^5.8.1",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2"
   }
 }

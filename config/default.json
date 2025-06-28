@@ -1,4 +1,7 @@
 {
+  "server": {
+    "port": 3000
+  },
   "printer": {
     "ipAddress": "192.168.0.100",
     "type": "epson",

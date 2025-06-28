@@ -2,31 +2,272 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>POS Gateway Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; padding: 2rem; }
-    button { margin-top: 1rem; }
+    :root {
+      --primary-color: #2563eb;
+      --primary-hover: #1d4ed8;
+      --card-bg: #ffffff;
+      --bg-color: #f8fafc;
+      --text-color: #111827;
+      --border-color: #e5e7eb;
+    }
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+    }
+    .status-label {
+      font-weight: 600;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    input, select, textarea {
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    button {
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+    button:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+    .button-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+    pre {
+      background-color: #f1f5f9;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      color: #334155;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+    @media (max-width: 600px) {
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
-<h1>POS Gateway Health Dashboard</h1>
-<div id="status">Loading...</div>
-<button id="testPrint">Print Test Page</button>
+<h1>POS Gateway Dashboard</h1>
+<div class="container">
+  <div class="card">
+    <h2>Printer Status</h2>
+    <div class="status-grid" id="status">
+      <div class="status-label">Connection:</div><div id="connection">Loading...</div>
+      <div class="status-label">IP Address:</div><div id="ip">-</div>
+      <div class="status-label">Brand:</div><div id="type">-</div>
+      <div class="status-label">Interface:</div><div id="interface">-</div>
+      <div class="status-label">Logging:</div><div id="logging">-</div>
+    </div>
+    <button id="refreshBtn" style="margin-top:1rem;">Refresh Status</button>
+  </div>
+
+  <div class="card">
+    <h2>Custom Test Print</h2>
+    <div id="config-form">
+      <div class="input-group">
+        <label for="ipInput">IP Address</label>
+        <input type="text" id="ipInput" placeholder="Printer IP">
+      </div>
+      <div class="input-group">
+        <label for="brandSelect">Printer Brand</label>
+        <select id="brandSelect"></select>
+      </div>
+      <div class="input-group">
+        <label for="interfaceSelect">Interface Type</label>
+        <select id="interfaceSelect"></select>
+      </div>
+      <div class="input-group">
+        <label for="textInput">Print Text</label>
+        <textarea id="textInput">=== TEST PAGE ===
+POS Gateway Test
+{{date}}</textarea>
+      </div>
+      <div class="button-row">
+        <button id="testPrintBtn">Send Test Print</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Raw Status JSON</h2>
+    <pre id="raw-json">{}</pre>
+  </div>
+</div>
+<div class="footer">
+  POS Gateway &copy; 2024
+</div>
 
 <script>
-  async function refreshStatus() {
-    const res = await fetch('/api/status');
-    const json = await res.json();
-    document.getElementById('status').textContent = JSON.stringify(json, null, 2);
+  async function loadOptions() {
+    try {
+      const res = await fetch('/api/options');
+      const options = await res.json();
+
+      const brandSelect = document.getElementById('brandSelect');
+      const interfaceSelect = document.getElementById('interfaceSelect');
+      const ipInput = document.getElementById('ipInput');
+
+      brandSelect.innerHTML = '';
+      interfaceSelect.innerHTML = '';
+
+      options.brands.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b;
+        opt.textContent = b;
+        brandSelect.appendChild(opt);
+      });
+
+      options.interfaceTypes.forEach(i => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = i;
+        interfaceSelect.appendChild(opt);
+      });
+
+      if (options.default) {
+        ipInput.value = options.default.ipAddress || '';
+        brandSelect.value = options.default.type || options.brands[0];
+        interfaceSelect.value = options.default.interfaceType || options.interfaceTypes[0];
+      }
+    } catch (err) {
+      console.error('Error loading options', err);
+    }
   }
 
-  document.getElementById('testPrint').addEventListener('click', async () => {
-    await fetch('/api/test-print', { method: 'POST' });
-    await refreshStatus();
-    alert('Test page sent to printer!');
-  });
+  async function loadStatus() {
+    try {
+      const res = await fetch('/api/status');
+      const data = await res.json();
 
-  refreshStatus();
+      document.getElementById('connection').textContent = data.connected ? '✅ Connected' : '❌ Disconnected';
+      document.getElementById('ip').textContent = data.ipAddress || '-';
+      document.getElementById('type').textContent = data.type || '-';
+      document.getElementById('interface').textContent = data.interfaceType || '-';
+      document.getElementById('logging').textContent = String(data.logging);
+
+      document.getElementById('raw-json').textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+      console.error(err);
+      document.getElementById('connection').textContent = 'Error';
+      document.getElementById('raw-json').textContent = 'Error fetching status';
+    }
+  }
+
+  async function sendTestPrint() {
+    const btn = document.getElementById('testPrintBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const ip = document.getElementById('ipInput').value;
+    const brand = document.getElementById('brandSelect').value;
+    const interfaceType = document.getElementById('interfaceSelect').value;
+    let text = document.getElementById('textInput').value;
+    text = text.replace('{{date}}', new Date().toISOString());
+
+    try {
+      const res = await fetch('/print', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ text, ip, brand, interfaceType })
+      });
+
+      if (res.ok) {
+        alert('Test print sent successfully!');
+        await loadStatus();
+      } else {
+        const errData = await res.json();
+        alert('Error: ' + errData.error);
+      }
+    } catch (err) {
+      alert('Error sending print job');
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send Test Print';
+    }
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', loadStatus);
+  document.getElementById('testPrintBtn').addEventListener('click', sendTestPrint);
+
+  loadOptions();
+  loadStatus();
 </script>
 </body>
 </html>

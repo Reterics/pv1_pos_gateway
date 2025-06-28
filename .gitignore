@@ -1,0 +1,8 @@
+node_modules
+build
+dist
+*.log
+.idea
+docs
+coverage
+logs

@@ -3,127 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>POS Gateway Dashboard</title>
+  <title>POS Gateway Printer Configuration</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #2563eb;
+      --primary: #2563eb;
       --primary-hover: #1d4ed8;
-      --card-bg: #ffffff;
-      --bg-color: #f8fafc;
-      --text-color: #111827;
-      --border-color: #e5e7eb;
+      --bg: #f8fafc;
+      --card-bg: #fff;
+      --text: #111827;
+      --border: #e5e7eb;
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      padding: 2rem;
+      padding: 1rem;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: var(--bg);
+      color: var(--text);
     }
+
     h1 {
       text-align: center;
-      margin-bottom: 1rem;
-      font-size: 2rem;
+      margin: 1rem 0;
+      font-size: 1.75rem;
     }
+
     .container {
-      max-width: 900px;
-      margin: 0 auto;
+      max-width: 800px;
+      margin: auto;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 1.5rem;
     }
+
     .card {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-      padding: 1.5rem;
-      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
+
     .card h2 {
-      margin-top: 0;
+      margin: 0 0 1rem;
       font-size: 1.25rem;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border);
       padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
     }
+
     .status-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.75rem 1.5rem;
+      gap: 0.5rem 1rem;
       font-size: 0.95rem;
     }
+
     .status-label {
       font-weight: 600;
     }
+
     .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
       margin-bottom: 1rem;
     }
+
     label {
       font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
       font-size: 0.95rem;
     }
+
     input, select, textarea {
-      padding: 0.5rem;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font-size: 1rem;
       width: 100%;
-      box-sizing: border-box;
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card-bg);
+      font-size: 1rem;
     }
+
     textarea {
-      resize: vertical;
       min-height: 80px;
+      resize: vertical;
     }
+
     button {
-      background-color: var(--primary-color);
+      background: var(--primary);
       color: #fff;
       border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-size: 1rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: background 0.2s;
+      font-size: 1rem;
     }
+
     button:hover {
-      background-color: var(--primary-hover);
+      background: var(--primary-hover);
     }
+
     button:disabled {
-      background-color: #9ca3af;
+      background: #9ca3af;
       cursor: not-allowed;
     }
+
     .button-row {
       display: flex;
-      gap: 1rem;
       flex-wrap: wrap;
-      justify-content: flex-start;
+      gap: 0.75rem;
     }
-    pre {
-      background-color: #f1f5f9;
-      padding: 1rem;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 0.85rem;
-      color: #334155;
-    }
+
     .footer {
       text-align: center;
       margin-top: 2rem;
       font-size: 0.85rem;
       color: #6b7280;
     }
+
     @media (max-width: 600px) {
       .status-grid {
         grid-template-columns: 1fr;
       }
     }
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      text-align: center;
+      margin: 1rem 0 2rem;
+    }
+
+    .site-header h1 {
+      font-size: 1.8rem;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .logo {
+      height: 60px;
+      width: auto;
+      max-width: 200px;
+      object-fit: contain;
+    }
   </style>
 </head>
 <body>
-<h1>POS Gateway Dashboard</h1>
+<header class="site-header">
+  <img src="logo.png" alt="Project V1 Printer Gateway Logo" class="logo">
+  <span class="site-title">Project V1 Printer Gateway</span>
+</header>
 <div class="container">
   <div class="card">
     <h2>Printer Status</h2>
@@ -163,47 +198,26 @@ POS Gateway Test
       </div>
     </div>
   </div>
-
-  <div class="card">
-    <h2>Raw Status JSON</h2>
-    <pre id="raw-json">{}</pre>
-  </div>
 </div>
 <div class="footer">
   POS Gateway &copy; 2024
 </div>
-
 <script>
   async function loadOptions() {
     try {
       const res = await fetch('/api/options');
-      const options = await res.json();
-
+      const {brands, interfaceTypes, default: def} = await res.json();
       const brandSelect = document.getElementById('brandSelect');
       const interfaceSelect = document.getElementById('interfaceSelect');
       const ipInput = document.getElementById('ipInput');
 
-      brandSelect.innerHTML = '';
-      interfaceSelect.innerHTML = '';
+      brandSelect.innerHTML = brands.map(b => `<option value="${b}">${b}</option>`).join('');
+      interfaceSelect.innerHTML = interfaceTypes.map(i => `<option value="${i}">${i}</option>`).join('');
 
-      options.brands.forEach(b => {
-        const opt = document.createElement('option');
-        opt.value = b;
-        opt.textContent = b;
-        brandSelect.appendChild(opt);
-      });
-
-      options.interfaceTypes.forEach(i => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = i;
-        interfaceSelect.appendChild(opt);
-      });
-
-      if (options.default) {
-        ipInput.value = options.default.ipAddress || '';
-        brandSelect.value = options.default.type || options.brands[0];
-        interfaceSelect.value = options.default.interfaceType || options.interfaceTypes[0];
+      if (def) {
+        ipInput.value = def.ipAddress || '';
+        brandSelect.value = def.type || brands[0];
+        interfaceSelect.value = def.interfaceType || interfaceTypes[0];
       }
     } catch (err) {
       console.error('Error loading options', err);
@@ -213,19 +227,15 @@ POS Gateway Test
   async function loadStatus() {
     try {
       const res = await fetch('/api/status');
-      const data = await res.json();
-
-      document.getElementById('connection').textContent = data.connected ? '✅ Connected' : '❌ Disconnected';
-      document.getElementById('ip').textContent = data.ipAddress || '-';
-      document.getElementById('type').textContent = data.type || '-';
-      document.getElementById('interface').textContent = data.interfaceType || '-';
-      document.getElementById('logging').textContent = String(data.logging);
-
-      document.getElementById('raw-json').textContent = JSON.stringify(data, null, 2);
+      const d = await res.json();
+      document.getElementById('connection').textContent = d.connected ? '✅ Connected' : '❌ Disconnected';
+      document.getElementById('ip').textContent = d.ipAddress || '-';
+      document.getElementById('type').textContent = d.type || '-';
+      document.getElementById('interface').textContent = d.interfaceType || '-';
+      document.getElementById('logging').textContent = String(d.logging);
     } catch (err) {
       console.error(err);
       document.getElementById('connection').textContent = 'Error';
-      document.getElementById('raw-json').textContent = 'Error fetching status';
     }
   }
 
@@ -233,26 +243,22 @@ POS Gateway Test
     const btn = document.getElementById('testPrintBtn');
     btn.disabled = true;
     btn.textContent = 'Sending...';
-
     const ip = document.getElementById('ipInput').value;
     const brand = document.getElementById('brandSelect').value;
     const interfaceType = document.getElementById('interfaceSelect').value;
-    let text = document.getElementById('textInput').value;
-    text = text.replace('{{date}}', new Date().toISOString());
+    let text = document.getElementById('textInput').value.replace('{{date}}', new Date().toISOString());
 
     try {
-      const res = await fetch('/print', {
+      const res = await fetch('/api/print', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ text, ip, brand, interfaceType })
+        body: JSON.stringify({ text, ip, brand, interface_type: interfaceType })
       });
-
       if (res.ok) {
         alert('Test print sent successfully!');
         await loadStatus();
       } else {
-        const errData = await res.json();
-        alert('Error: ' + errData.error);
+        alert('Error: ' + (await res.json()).error);
       }
     } catch (err) {
       alert('Error sending print job');
@@ -266,8 +272,10 @@ POS Gateway Test
   document.getElementById('refreshBtn').addEventListener('click', loadStatus);
   document.getElementById('testPrintBtn').addEventListener('click', sendTestPrint);
 
-  loadOptions();
-  loadStatus();
+  (async () => {
+    await loadOptions();
+    await loadStatus();
+  })();
 </script>
 </body>
 </html>

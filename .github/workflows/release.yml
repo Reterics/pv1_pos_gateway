@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # IMPORTANT: fetch all history for tags
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Get previous package.json
+        run: |
+          git fetch --tags
+          git show HEAD~1:package.json > package_old.json
+
+      - name: Compare versions
+        id: check
+        run: |
+          NEW_VERSION=$(jq -r .version package.json)
+          OLD_VERSION=$(jq -r .version package_old.json)
+          echo "Old: $OLD_VERSION"
+          echo "New: $NEW_VERSION"
+          if [ "$NEW_VERSION" != "$OLD_VERSION" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Find Previous Tag
+        id: prevtag
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          PREV_TAG=$(git tag --sort=-creatordate | grep '^v' | head -n1)
+          echo "Previous tag: $PREV_TAG"
+          if [ -z "$PREV_TAG" ]; then
+            PREV_TAG=""
+          fi
+          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
+
+      - name: Generate Changelog
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          PREV_TAG="${{ steps.prevtag.outputs.prev_tag }}"
+          echo "Generating changelog from $PREV_TAG to HEAD"
+          if [ -z "$PREV_TAG" ]; then
+            echo "Initial release" > CHANGELOG.md
+          else
+            git log --pretty=format:"- %s" $PREV_TAG..HEAD > CHANGELOG.md
+          fi
+
+      - name: Show Changelog
+        if: steps.check.outputs.changed == 'true'
+        run: cat CHANGELOG.md
+
+      - name: Create Git tag
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag v${{ steps.check.outputs.version }}
+          git push origin v${{ steps.check.outputs.version }}
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.changed == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.check.outputs.version }}
+          body_path: CHANGELOG.md

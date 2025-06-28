@@ -190,4 +190,13 @@ npm run coverage
 
 ## License
 
-ISC
+[MIT](./LICENSE)
+
+## Contribute
+
+There are many ways to [contribute](./CONTRIBUTING.md) to Printer Gateway.
+* [Submit bugs](https://github.com/Reterics/pv1_printer_gateway/issues) and help us verify fixes as they are checked in.
+* Review the [source code changes](https://github.com/Reterics/pv1_printer_gateway/pulls).
+* [Contribute bug fixes](https://github.com/Reterics/pv1_printer_gateway/blob/main/CONTRIBUTING.md).
+
+

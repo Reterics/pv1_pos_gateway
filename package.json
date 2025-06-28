@@ -1,10 +1,10 @@
 {
   "name": "pv1_printer_gateway",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "dist/server.js",
   "bin": "dist/server.js",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.14.0"
   },
   "engineStrict": true,
   "scripts": {
@@ -14,24 +14,15 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "coverage": "jest --collect-coverage",
-    "pkg:win": "npm run build && pkg . --targets node18-win-x64 --output dist/pos-gateway-win.exe",
-    "pkg:linux": "npm run build && pkg . --targets node18-linux-x64 --output dist/pos-gateway-linux",
-    "pkg:all": "npm run pkg:win && npm run pkg:linux"
+    "nexe:win": "npm run build && nexe dist/server.js -t windows-x64-22.14.0 -o dist/pos-gateway-win.exe",
+    "nexe:linux": "npm run build && nexe dist/server.js -t linux-x64-22.14.0 -o dist/pos-gateway-linux",
+    "nexe:all": "npm run nexe:win && npm run nexe:linux",
+    "nexe:build:win": "npx nexe dist/server.js --build -t windows-x64-22.14.0 -o dist/pos-gateway-win.exe --verbose"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Attila Reterics",
+  "license": "MIT",
   "description": "",
-  "pkg": {
-    "assets": [
-      "config/**/*",
-      "public/**/*"
-    ],
-    "targets": [
-      "node22-win-x64",
-      "node22-linux-x64"
-    ]
-  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
@@ -45,10 +36,11 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jest": "^29.5.12",
-    "@types/node": "^24.0.7",
+    "@types/node": "^22.15.34",
     "@types/supertest": "^6.0.2",
+    "@types/webpack": "^5.28.5",
     "jest": "^29.7.0",
-    "pkg": "^5.8.1",
+    "nexe": "^5.0.0-beta.4",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2"
   }

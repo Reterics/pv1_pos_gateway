@@ -24,9 +24,12 @@ interface AppConfig {
 
 // Load JSON file
 function loadConfigFile(): AppConfig {
-    const configPath = path.join(process.cwd(), 'config', 'default.json');
+    let configPath = path.join(process.cwd(), 'config', 'default.json');
     if (!fs.existsSync(configPath)) {
-        throw new Error('Missing config/default.json');
+        configPath = path.join(process.cwd(), '../config', 'default.json');
+        if (!fs.existsSync(configPath)) {
+            throw new Error('Missing config/default.json');
+        }
     }
     const file = fs.readFileSync(configPath, 'utf-8');
     return JSON.parse(file);
